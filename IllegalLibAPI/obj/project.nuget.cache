@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/mD5X0T3MfEjwXc/q0SOep0o81h4zLb2Tscl+t5OH5pkOgzDAH/Yj+IhnN7Z0PwamPfQOtk9pmexSXKmdKzY/g==",
+  "dgSpecHash": "QnU7Mp3TStrVJyLUJSJVx6OLm32kMqxZglkPwVPdOhrBbJQ/9z3HRQJ/lMIoA2vkErSIJbR8WGPGOal9FT61SQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\IllegalLibAPI.csproj",
   "expectedPackageFiles": [
@@ -28,6 +28,7 @@
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.caching.memory\\8.0.0\\microsoft.extensions.caching.memory.8.0.0.nupkg.sha512",
+    "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.configuration\\7.0.0\\microsoft.extensions.configuration.7.0.0.nupkg.sha512",
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0\\microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
     "C:\\Users\\fpore\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",

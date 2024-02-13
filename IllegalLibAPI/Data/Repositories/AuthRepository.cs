@@ -1,7 +1,10 @@
+using System.Collections;
 using System.Security.Authentication;
+using System.Security.Cryptography;
 using IllegalLibAPI.Interfaces;
 using IllegalLibAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace IllegalLibAPI.Data.Repositories
 {
@@ -9,16 +12,18 @@ namespace IllegalLibAPI.Data.Repositories
     {
         private readonly ILogger _logger;
         private readonly DataContext _dataContext;
-        public AuthRepository(DataContext context, ILogger logger)
+        private readonly TokenGenerator _tokenGenerator;
+        public AuthRepository(DataContext context, ILogger logger, TokenGenerator tokenGenerator)
         {
             _dataContext = context;
             _logger = logger;
+            _tokenGenerator = tokenGenerator;
         }
 
         public async Task<AuthUser> AuthenticateUserAsync(AuthUser authUser, bool hashedPassword = false)
         {
             var existingUser = await _dataContext.AuthUsers
-            .FirstOrDefaultAsync(u => u.Username == authUser.Username) 
+            .FirstOrDefaultAsync(u => u.Username == authUser.Username)
             ?? throw new AuthenticationException("Invalid username or password");
 
             var passwordIsValid =
@@ -29,9 +34,55 @@ namespace IllegalLibAPI.Data.Repositories
             return existingUser;
         }
 
-        public Task RecoverPasswordAsync(string email)
+        public async Task<AuthUser> GetUserByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation($"Getting a user with email {email}");
+
+            var userData = await _dataContext.AuthUsers
+            .Where(u => u.Email == email)
+            .Include(u => u.User)
+            .AsNoTracking()
+            .FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"User with email: {email} does not exist");
+            return userData!;
+        }
+
+        public async Task RecoverPasswordAsync(string email, string token, string newPassword)
+        {
+            var user = await GetUserByEmailAsync(email);
+
+            if (user.ResetToken == null)
+            {
+                throw new InvalidOperationException("User does not have a recovery token.");
+            }
+
+            if (user.ResetToken != token)
+            {
+                throw new InvalidOperationException("Recovery token invalid.");
+            }
+
+            user.Password = newPassword;
+            user.ResetToken = string.Empty;
+
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<string> AssignResetTokenAsync(string email)
+        {
+            var user = GetUserByEmailAsync(email).Result;
+            var token = _tokenGenerator.GenerateResetToken(email);
+
+            if (user.ResetToken != null && user.ResetToken != token)
+            {
+                throw new InvalidOperationException("Invalid reset token");
+            }
+            else if (user.ResetToken == token)
+            {
+                throw new InvalidOperationException("Unexpected error occured: incorrect token");
+            }
+            user.ResetToken = token;
+
+            await _dataContext.SaveChangesAsync();
+            return token;
         }
 
         public async Task<AuthUser> RegisterUserAsync(AuthUser authUser)
@@ -53,7 +104,7 @@ namespace IllegalLibAPI.Data.Repositories
                 _logger.LogError(ex, "Error occurred while registering the user.");
                 throw;
             }
-            
+
             return authUser;
         }
     }

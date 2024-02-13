@@ -1,14 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IllegalLibAPI.Models
 {
-    public class Publisher
+    public record Publisher
     {
-        [Required]
         [Key]
-        public int PublisherId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PublisherId { get; init; }
+
         [Required]
-        public string Name { get; set; }
-        
+        public string Name { get; init; }
     }
 }

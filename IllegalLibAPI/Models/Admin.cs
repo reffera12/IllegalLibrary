@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace IllegalLibAPI.Models
 {
-    public class Admin
+    public record Admin
     {
-        [Required]
-        public Guid AdminId { get; set; }
+        public Guid AdminId { get; init; }
     }
 }

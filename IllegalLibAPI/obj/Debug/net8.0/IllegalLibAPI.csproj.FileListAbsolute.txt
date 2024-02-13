@@ -138,3 +138,5 @@ C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\runtimes\w
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\.prettierrc.json
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\package-lock.json
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\package.json
+C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.sourcelink.json
+C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll

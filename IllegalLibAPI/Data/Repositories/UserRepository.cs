@@ -29,17 +29,6 @@ namespace IllegalLibAPI.Data.Repositories
             return userData!;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
-        {
-            _logger.LogInformation($"Getting a user with email {email}");
-
-            var userData = await _dataContext.Users
-            .Where(u => u.AuthUser.Email == email)
-            .AsNoTracking()
-            .FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"User with email: {email} does not exist");
-            return userData!;
-        }
-
         public async Task<User> CreateUserAsync(User user, Guid userId)
         {
 
@@ -67,7 +56,7 @@ namespace IllegalLibAPI.Data.Repositories
             var usernameExists = await _dataContext.Users
             .AnyAsync(u => u.AuthUser.Username == user.AuthUser.Username);
             if (usernameExists) throw new InvalidOperationException($"User with this username already exists");
-            
+
             userToUpdate.AuthUser.Username = user.AuthUser.Username;
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
