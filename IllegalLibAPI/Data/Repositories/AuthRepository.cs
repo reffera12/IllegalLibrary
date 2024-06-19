@@ -13,11 +13,14 @@ namespace IllegalLibAPI.Data.Repositories
         private readonly ILogger _logger;
         private readonly DataContext _dataContext;
         private readonly TokenGenerator _tokenGenerator;
-        public AuthRepository(DataContext context, ILogger logger, TokenGenerator tokenGenerator)
+        private readonly IUserRepository _userRepository;
+
+        public AuthRepository(DataContext context, ILogger logger, TokenGenerator tokenGenerator, UserRepository userRepository)
         {
             _dataContext = context;
             _logger = logger;
             _tokenGenerator = tokenGenerator;
+            _userRepository = userRepository;
         }
 
         public async Task<AuthUser> AuthenticateUserAsync(AuthUser authUser, bool hashedPassword = false)
@@ -61,8 +64,6 @@ namespace IllegalLibAPI.Data.Repositories
             }
 
             user.Password = newPassword;
-            user.ResetToken = string.Empty;
-
             await _dataContext.SaveChangesAsync();
         }
 
@@ -79,23 +80,23 @@ namespace IllegalLibAPI.Data.Repositories
             {
                 throw new InvalidOperationException("Unexpected error occured: incorrect token");
             }
-            user.ResetToken = token;
-
             await _dataContext.SaveChangesAsync();
             return token;
         }
 
-        public async Task<AuthUser> RegisterUserAsync(AuthUser authUser)
+        public async Task<AuthUser> RegisterUserAsync(RegisterDTO userToRegister)
         {
-            var usernameExists = await _dataContext.AuthUsers.AnyAsync(u => u.Username == authUser.Username);
+            var usernameExists = await _dataContext.AuthUsers.AnyAsync(u => u.Username == userToRegister.UserName);
             if (usernameExists) throw new InvalidOperationException($"Username is taken");
-            var emailExists = await _dataContext.AuthUsers.AnyAsync(u => u.Email == authUser.Email);
+            var emailExists = await _dataContext.AuthUsers.AnyAsync(u => u.Email == userToRegister.Email);
             if (emailExists) throw new InvalidOperationException("Account with this email already exists");
 
-            await _dataContext.AuthUsers.AddAsync(authUser);
+            AuthUser authUser = new(userToRegister.UserName, userToRegister.Password, userToRegister.Email);
+
 
             try
             {
+                await _dataContext.AuthUsers.AddAsync(authUser);
                 await _dataContext.SaveChangesAsync();
                 _logger.LogInformation("User registration successful.");
             }
@@ -104,8 +105,20 @@ namespace IllegalLibAPI.Data.Repositories
                 _logger.LogError(ex, "Error occurred while registering the user.");
                 throw;
             }
+            await _userRepository.CreateUserAsync(authUser, userToRegister.FirstName, userToRegister.LastName);
+
 
             return authUser;
+        }
+
+        public async Task<bool> IsUsernameTakenAsync(string username)
+        {
+            return await _dataContext.AuthUsers.AnyAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> IsEmailTakenAsync(string email)
+        {
+            return await _dataContext.AuthUsers.AnyAsync(u => u.Email == email);
         }
     }
 }

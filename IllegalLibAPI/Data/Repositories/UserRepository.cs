@@ -18,23 +18,25 @@ namespace IllegalLibAPI.Data.Repositories
 
         public async Task<User> GetUserByIdAsync(Guid userId)
         {
-            _logger.LogInformation($"Getting a user by {userId.ToString()}");
+            var user = await _dataContext.Set<AuthUser>().Where(u => u.UserId == userId).FirstOrDefaultAsync();
 
-            var userData = await _dataContext.Users
-            .Include(u => u.bookRequests)
-            .Include(u => u.AuthUser)
-            .Where(u => u.UserId == userId)
-            .AsNoTracking()
-            .FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"User with id: {userId} does not exist");
-            return userData!;
+            if (user == null || user.User == null)
+            {
+                throw new ArgumentException(userId + "does not exist");
+            }
+            return user.User;
         }
 
-        public async Task<User> CreateUserAsync(User user, Guid userId)
+        public async Task<User> CreateUserAsync(AuthUser registeredUser, string firstName, string lastName)
         {
+            if (firstName == string.Empty || lastName == string.Empty || registeredUser == null)
+            {
+                _logger.LogWarning("Received a request with invalid data");
+                throw new ArgumentException("firstName and lastName cannot be null");
+            }
+            User userToCreate = new(registeredUser.UserId, firstName, lastName, registeredUser);
 
-            if (user == null) _logger.LogWarning("Received request with empty user data");
-            user.UserId = userId;
-            await _dataContext.Users.AddAsync(user);
+            await _dataContext.Users.AddAsync(userToCreate);
             try
             {
                 await _dataContext.SaveChangesAsync();
@@ -44,7 +46,7 @@ namespace IllegalLibAPI.Data.Repositories
                 _logger.LogError(ex, "There was an error creating the user");
                 throw;
             }
-            return user;
+            return userToCreate;
         }
 
         public async Task<User> UpdateUserAsync(Guid userId, User user)
@@ -57,10 +59,10 @@ namespace IllegalLibAPI.Data.Repositories
             .AnyAsync(u => u.AuthUser.Username == user.AuthUser.Username);
             if (usernameExists) throw new InvalidOperationException($"User with this username already exists");
 
-            userToUpdate.AuthUser.Username = user.AuthUser.Username;
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
             userToUpdate.Bio = user.Bio;
+            userToUpdate.AuthUser.Email = user.AuthUser.Email;
 
             try
             {

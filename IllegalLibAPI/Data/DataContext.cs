@@ -17,10 +17,10 @@ namespace IllegalLibAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.AuthUser)
-                .WithOne()
-                .HasForeignKey<AuthUser>(au => au.UserId)
+            modelBuilder.Entity<AuthUser>()
+                .HasOne(u => u.User)
+                .WithOne(a=> a.AuthUser)
+                .HasForeignKey<User>(au => au.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

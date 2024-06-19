@@ -140,3 +140,14 @@ C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\package-lo
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\package.json
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.sourcelink.json
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.csproj.AssemblyReference.cache
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.AssemblyInfoInputs.cache
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.AssemblyInfo.cs
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.csproj.CoreCompileInputs.cache
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.sourcelink.json
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.dll
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\refint\IllegalLibAPI.dll
+C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.pdb

@@ -8,21 +8,27 @@ namespace IllegalLibAPI.Models
     {
         [Required]
         [Key]
-        [ForeignKey("AuthUser")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid UserId { get; init; }
-
-        public string FirstName { get; init; } = string.Empty;
-        public string LastName { get; init; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
 
         [Required]
-        public long Downloads { get; init; } = 0;
+        public long Downloads { get; set; } = 0;
 
         [MaxLength(5000)]
-        public string? Bio { get; init; } = string.Empty;
+        public string? Bio { get; set; } = string.Empty;
 
-        public BookRequest[] BookRequests { get; init; } = Array.Empty<BookRequest>();
+        public BookRequest[] BookRequests { get; set; } = Array.Empty<BookRequest>();
 
         [Required]
         public AuthUser AuthUser { get; init; }
+
+        public User(Guid userId, string firstName, string lastName, AuthUser authUser){
+            UserId = userId;
+            FirstName = firstName;
+            LastName = lastName;
+            AuthUser = authUser;
+        }
     }
 }

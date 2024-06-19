@@ -15,17 +15,23 @@ namespace IllegalLibAPI.Models
         public string Username { get; init; }
         [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,65}$")]
-        public string Password { get; init; }
+        public string Password { get; set; }
         [Required]
-        [EmailAddress]
-        public string Email { get; init; }
+        [EmailAddress]  
+        public string Email { get; set; }
         [MinLength(128)]
         public string ResetToken { get; init; }
         public string JwtToken { get; init; }
         [JsonIgnore]
-        public string RefreshToken { get; init; }
+        public string RefreshToken { get; set; }
 
         public User? User
-        { get; init; }
+        { get; set; }
+
+        public AuthUser(string username, string password, string email){
+            Username = username;
+            Password =  password;  
+            Email = email;
+        }
     }
 }
