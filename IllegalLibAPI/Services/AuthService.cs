@@ -1,55 +1,53 @@
-using System.IdentityModel.Tokens.Jwt;
 using IllegalLibAPI.Interfaces;
 using IllegalLibAPI.Models;
-using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Cryptography;
 using IllegalLibAPI.Data;
+using System.Security.Authentication;
 
 namespace IllegalLibAPI.Services
 {
     public class AuthService
     {
         private readonly IAuthRepository _authRepository;
-        private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly DataContext _dataContext;
         private readonly ILogger<AuthService> _logger;
+        private readonly JwtTokenService _jwtTokenService;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IUserRepository userRepository, DataContext dataContext, ILogger<AuthService> logger)
+        public AuthService(IAuthRepository authRepository, IUserRepository userRepository, DataContext dataContext, ILogger<AuthService> logger, JwtTokenService jwtTokenService)
         {
             _authRepository = authRepository;
-            _configuration = configuration;
             _userRepository = userRepository;
             _dataContext = dataContext;
             _logger = logger;
+            _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<AuthUser> AuthenticateAsync(AuthUser authUser, bool hashedPassword = false)
+        public async Task<string> AuthenticateAsync(string username, string password)
         {
-            var authuser = await _authRepository.AuthenticateUserAsync(authUser, hashedPassword);
-
-            var key = _configuration.GetSection("JwtSecret").Value;
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenKey = Encoding.ASCII.GetBytes(key);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new Claim[]{
-                    new Claim("Id", authUser.UserId.ToString()),
-                    new Claim("Username", authUser.Username),
-                    new Claim(ClaimTypes.Email, authUser.Email)
-                }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                var existingUser = await _authRepository.AuthenticateUserAsync(username, password);
 
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature),
-            };
-            var jwtToken = tokenHandler.CreateToken(tokenDescriptor);
-            var jwtTokenString = tokenHandler.WriteToken(jwtToken);
-            return authuser;
+                if (existingUser == null)
+                {
+                    throw new AuthenticationException("User not found or invalid credentials.");
+                }
+
+                var jwtTokenString = _jwtTokenService.Authenticate(existingUser.Username, existingUser.Password);
+
+                return jwtTokenString;
+            }
+            catch (AuthenticationException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while authenticating the user.");
+                throw new AuthenticationException("Authentication failed.");
+            }
         }
-        public async Task<AuthUser> RegisterUserAsync(RegisterDTO userToRegister)
+        public async Task<RegisterDTO> RegisterUserAsync(RegisterDTO userToRegister)
         {
             var usernameExists = await _authRepository.IsUsernameTakenAsync(userToRegister.UserName);
             if (usernameExists)
@@ -87,8 +85,7 @@ namespace IllegalLibAPI.Services
                     throw;
                 }
             }
-
-            return authUser;
+            return userToRegister;
         }
     }
 }

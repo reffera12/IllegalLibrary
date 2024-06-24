@@ -22,9 +22,12 @@ namespace IllegalLibAPI.Models
         public BookRequest[] BookRequests { get; set; } = Array.Empty<BookRequest>();
 
         [Required]
-        public AuthUser AuthUser { get; init; }
+        public AuthUser AuthUser { get; set; }
 
-        public User(Guid userId, string firstName, string lastName, AuthUser authUser){
+        public User() { }
+
+        public User(Guid userId, string firstName, string lastName, AuthUser authUser)
+        {
             UserId = userId;
             FirstName = firstName;
             LastName = lastName;

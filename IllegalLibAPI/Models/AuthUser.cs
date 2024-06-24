@@ -28,6 +28,8 @@ namespace IllegalLibAPI.Models
         public User? User
         { get; set; }
 
+        public AuthUser() { }
+
         public AuthUser(string username, string password, string email){
             Username = username;
             Password =  password;  

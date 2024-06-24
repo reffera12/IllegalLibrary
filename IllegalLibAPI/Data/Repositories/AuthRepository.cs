@@ -1,36 +1,30 @@
-using System.Collections;
 using System.Security.Authentication;
-using System.Security.Cryptography;
 using IllegalLibAPI.Interfaces;
 using IllegalLibAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace IllegalLibAPI.Data.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthRepository> _logger;
         private readonly DataContext _dataContext;
         private readonly TokenGenerator _tokenGenerator;
-        private readonly IUserRepository _userRepository;
 
-        public AuthRepository(DataContext context, ILogger logger, TokenGenerator tokenGenerator, UserRepository userRepository)
+        public AuthRepository(DataContext context, ILogger<AuthRepository> logger, TokenGenerator tokenGenerator)
         {
             _dataContext = context;
             _logger = logger;
             _tokenGenerator = tokenGenerator;
-            _userRepository = userRepository;
         }
 
-        public async Task<AuthUser> AuthenticateUserAsync(AuthUser authUser, bool hashedPassword = false)
+        public async Task<AuthUser> AuthenticateUserAsync(string username, string password)
         {
             var existingUser = await _dataContext.AuthUsers
-            .FirstOrDefaultAsync(u => u.Username == authUser.Username)
-            ?? throw new AuthenticationException("Invalid username or password");
+            .FirstOrDefaultAsync(u => u.Username == username)
+            ?? throw new AuthenticationException("No user with this username exists");
 
-            var passwordIsValid =
-            hashedPassword ? existingUser.Password == authUser.Password : BCrypt.Net.BCrypt.Verify(authUser.Password, existingUser.Password);
+            var passwordIsValid = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
 
             if (!passwordIsValid) throw new AuthenticationException("Invalid username or password");
 
@@ -91,7 +85,9 @@ namespace IllegalLibAPI.Data.Repositories
             var emailExists = await _dataContext.AuthUsers.AnyAsync(u => u.Email == userToRegister.Email);
             if (emailExists) throw new InvalidOperationException("Account with this email already exists");
 
-            AuthUser authUser = new(userToRegister.UserName, userToRegister.Password, userToRegister.Email);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userToRegister.Password);
+
+            AuthUser authUser = new(userToRegister.UserName, hashedPassword, userToRegister.Email);
 
 
             try
@@ -105,8 +101,7 @@ namespace IllegalLibAPI.Data.Repositories
                 _logger.LogError(ex, "Error occurred while registering the user.");
                 throw;
             }
-            await _userRepository.CreateUserAsync(authUser, userToRegister.FirstName, userToRegister.LastName);
-
+            await _dataContext.SaveChangesAsync();
 
             return authUser;
         }

@@ -1,7 +1,6 @@
 using IllegalLibAPI.Interfaces;
 using IllegalLibAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace IllegalLibAPI.Data.Repositories
 {
@@ -53,7 +52,7 @@ namespace IllegalLibAPI.Data.Repositories
         {
             var userToUpdate = await GetUserByIdAsync(userId);
 
-            if (userToUpdate is null) return null;
+            if (userToUpdate is null) throw new KeyNotFoundException($"User with id: {userId} does not exist");
 
             var usernameExists = await _dataContext.Users
             .AnyAsync(u => u.AuthUser.Username == user.AuthUser.Username);
@@ -77,28 +76,11 @@ namespace IllegalLibAPI.Data.Repositories
             return userToUpdate;
         }
 
-        public async Task DeleteUserAsync(Guid userId)
-        {
-            var userToRemove = await _dataContext.Users.FirstOrDefaultAsync(u => u.UserId == userId) ?? throw new KeyNotFoundException($"User with id: {userId} does not exist");
-            try
-            {
-                _dataContext.Users.Remove(userToRemove);
 
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e.Message);
-                throw;
-            }
-            await _dataContext.SaveChangesAsync();
-        }
-
-        public async Task ChangePasswordAsync(User user, string newPassword, bool hashedPassword = false)
+        public async Task ChangePasswordAsync(User user, string newPassword)
         {
             // Validate the old password before proceeding
-            var oldPasswordIsValid = hashedPassword
-                ? user.AuthUser.Password == newPassword
-                : BCrypt.Net.BCrypt.Verify(newPassword, user.AuthUser.Password);
+            var oldPasswordIsValid = BCrypt.Net.BCrypt.Verify(newPassword, user.AuthUser.Password);
 
             if (!oldPasswordIsValid)
             {
@@ -106,7 +88,7 @@ namespace IllegalLibAPI.Data.Repositories
             }
 
             // Update the user's password
-            user.AuthUser.Password = hashedPassword ? newPassword : BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.AuthUser.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
 
             // Save changes to the database
             await _dataContext.SaveChangesAsync();

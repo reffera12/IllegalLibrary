@@ -7,8 +7,8 @@ namespace IllegalLibAPI.Data
     {
         public DataContext(DbContextOptions options) : base(options)
         { }
-        public DbSet<User> Users { get; set; }
         public DbSet<AuthUser> AuthUsers { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookFile> BookFiles { get; set; }
         public DbSet<Author> Authors { get; set; }
@@ -19,7 +19,7 @@ namespace IllegalLibAPI.Data
         {
             modelBuilder.Entity<AuthUser>()
                 .HasOne(u => u.User)
-                .WithOne(a=> a.AuthUser)
+                .WithOne(a => a.AuthUser)
                 .HasForeignKey<User>(au => au.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
