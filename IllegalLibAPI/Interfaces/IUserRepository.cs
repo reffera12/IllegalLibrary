@@ -5,8 +5,8 @@ namespace IllegalLibAPI.Interfaces
     public interface IUserRepository
     {
         Task<User> GetUserByIdAsync(Guid userId);
+        Task<User> CreateUserAsync(AuthUser registeredUser, string firstName, string lastName);
         Task<User> UpdateUserAsync(Guid userId, User user);
-        Task DeleteUserAsync(Guid userId);
-        Task ChangePasswordAsync(User user, string newPassword, bool hashedPassword = false);
+        Task ChangePasswordAsync(User user, string newPassword);
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IllegalLibAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7b906e08b128748134a2499e2d4bc1cabc5d0707")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+086ea36824fc9ddd12308ac07364151e82daf254")]
 [assembly: System.Reflection.AssemblyProductAttribute("IllegalLibAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IllegalLibAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

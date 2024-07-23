@@ -1,37 +1,48 @@
-using System.Collections;
 using System.Security.Authentication;
-using System.Security.Cryptography;
+using System.Security.Claims;
 using IllegalLibAPI.Interfaces;
 using IllegalLibAPI.Models;
+using IllegalLibAPI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace IllegalLibAPI.Data.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthRepository> _logger;
         private readonly DataContext _dataContext;
         private readonly TokenGenerator _tokenGenerator;
-        public AuthRepository(DataContext context, ILogger logger, TokenGenerator tokenGenerator)
+        private readonly JwtTokenService _jwtTokenService;
+
+        public AuthRepository(DataContext context, ILogger<AuthRepository> logger, TokenGenerator tokenGenerator, JwtTokenService jwtTokenService)
         {
             _dataContext = context;
             _logger = logger;
             _tokenGenerator = tokenGenerator;
+            _jwtTokenService = jwtTokenService;
         }
 
-        public async Task<AuthUser> AuthenticateUserAsync(AuthUser authUser, bool hashedPassword = false)
+        public async Task<string> AuthenticateUserAsync(string username, string password)
         {
             var existingUser = await _dataContext.AuthUsers
-            .FirstOrDefaultAsync(u => u.Username == authUser.Username)
-            ?? throw new AuthenticationException("Invalid username or password");
+            .FirstOrDefaultAsync(u => u.Username == username)
+            ?? throw new AuthenticationException("No user with this username exists");
 
-            var passwordIsValid =
-            hashedPassword ? existingUser.Password == authUser.Password : BCrypt.Net.BCrypt.Verify(authUser.Password, existingUser.Password);
+            var passwordIsValid = BCrypt.Net.BCrypt.Verify(password, existingUser.Password);
 
             if (!passwordIsValid) throw new AuthenticationException("Invalid username or password");
 
-            return existingUser;
+
+            var accessToken = _jwtTokenService.Authenticate(existingUser.Username, existingUser.Password);
+            var refreshToken = _tokenGenerator.GenerateResetOrRefreshToken();
+
+            existingUser.JwtToken = accessToken;
+            existingUser.RefreshToken = refreshToken;
+            existingUser.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+
+            await _dataContext.SaveChangesAsync();
+
+            return accessToken;
         }
 
         public async Task<AuthUser> GetUserByEmailAsync(string email)
@@ -61,41 +72,41 @@ namespace IllegalLibAPI.Data.Repositories
             }
 
             user.Password = newPassword;
-            user.ResetToken = string.Empty;
-
             await _dataContext.SaveChangesAsync();
         }
 
         public async Task<string> AssignResetTokenAsync(string email)
         {
-            var user = GetUserByEmailAsync(email).Result;
-            var token = _tokenGenerator.GenerateResetToken(email);
+            // var user = GetUserByEmailAsync(email).Result;
+            // var token = _tokenGenerator.GenerateResetToken(email);
 
-            if (user.ResetToken != null && user.ResetToken != token)
-            {
-                throw new InvalidOperationException("Invalid reset token");
-            }
-            else if (user.ResetToken == token)
-            {
-                throw new InvalidOperationException("Unexpected error occured: incorrect token");
-            }
-            user.ResetToken = token;
-
-            await _dataContext.SaveChangesAsync();
-            return token;
+            // if (user.ResetToken != null && user.ResetToken != token)
+            // {
+            //     throw new InvalidOperationException("Invalid reset token");
+            // }
+            // else if (user.ResetToken == token)
+            // {
+            //     throw new InvalidOperationException("Unexpected error occured: incorrect token");
+            // }
+            // await _dataContext.SaveChangesAsync();
+            // return token;
+            throw new NotImplementedException();
         }
 
-        public async Task<AuthUser> RegisterUserAsync(AuthUser authUser)
+        public async Task<AuthUser> RegisterUserAsync(RegisterDTO userToRegister)
         {
-            var usernameExists = await _dataContext.AuthUsers.AnyAsync(u => u.Username == authUser.Username);
+            var usernameExists = await _dataContext.AuthUsers.AnyAsync(u => u.Username == userToRegister.UserName);
             if (usernameExists) throw new InvalidOperationException($"Username is taken");
-            var emailExists = await _dataContext.AuthUsers.AnyAsync(u => u.Email == authUser.Email);
+            var emailExists = await _dataContext.AuthUsers.AnyAsync(u => u.Email == userToRegister.Email);
             if (emailExists) throw new InvalidOperationException("Account with this email already exists");
 
-            await _dataContext.AuthUsers.AddAsync(authUser);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userToRegister.Password);
+
+            AuthUser authUser = new(userToRegister.UserName, hashedPassword, userToRegister.Email);
 
             try
             {
+                await _dataContext.AuthUsers.AddAsync(authUser);
                 await _dataContext.SaveChangesAsync();
                 _logger.LogInformation("User registration successful.");
             }
@@ -106,6 +117,23 @@ namespace IllegalLibAPI.Data.Repositories
             }
 
             return authUser;
+        }
+
+        public async Task LogoutUserAsync(AuthUser user){
+            user.JwtToken = null;
+            user.RefreshToken = null;
+            user.RefreshTokenExpiryTime = DateTime.Now;
+            await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsUsernameTakenAsync(string username)
+        {
+            return await _dataContext.AuthUsers.AnyAsync(u => u.Username == username);
+        }
+
+        public async Task<bool> IsEmailTakenAsync(string email)
+        {
+            return await _dataContext.AuthUsers.AnyAsync(u => u.Email == email);
         }
     }
 }
