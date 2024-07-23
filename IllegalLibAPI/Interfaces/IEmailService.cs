@@ -1,5 +1,5 @@
-public interface IEmailService
-{
-    void SendEmail(Message message);
+// public interface IEmailService
+// {
+//     void SendEmail(Message message);
     
-}
+// }

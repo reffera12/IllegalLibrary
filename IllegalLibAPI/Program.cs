@@ -22,10 +22,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<JwtTokenService>();
 builder.Services.AddTransient<TokenGenerator>();
-var emailConfig = builder.Configuration
-        .GetSection("EmailConfiguration")
-        .Get<EmailConfiguration>();
-builder.Services.AddSingleton(emailConfig);
+// var emailConfig = builder.Configuration
+//         .GetSection("EmailConfiguration")
+//         .Get<EmailConfiguration>();
+// builder.Services.AddSingleton(emailConfig);
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

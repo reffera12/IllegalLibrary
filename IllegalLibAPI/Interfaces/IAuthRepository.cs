@@ -4,7 +4,7 @@ namespace IllegalLibAPI.Interfaces
 {
     public interface IAuthRepository
     {
-        Task<AuthUser> AuthenticateUserAsync(string username, string password);
+        Task<string> AuthenticateUserAsync(string username, string password);
         Task<AuthUser> RegisterUserAsync(RegisterDTO userToRegister);
         Task RecoverPasswordAsync(string email, string token, string newPassword);
         Task<string> AssignResetTokenAsync(string email);

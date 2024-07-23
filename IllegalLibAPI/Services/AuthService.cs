@@ -26,16 +26,9 @@ namespace IllegalLibAPI.Services
         {
             try
             {
-                var existingUser = await _authRepository.AuthenticateUserAsync(username, password);
+                var signInCredentials = await _authRepository.AuthenticateUserAsync(username, password);
 
-                if (existingUser == null)
-                {
-                    throw new AuthenticationException("User not found or invalid credentials.");
-                }
-
-                var jwtTokenString = _jwtTokenService.Authenticate(existingUser.Username, existingUser.Password);
-
-                return jwtTokenString;
+                return signInCredentials;
             }
             catch (AuthenticationException)
             {

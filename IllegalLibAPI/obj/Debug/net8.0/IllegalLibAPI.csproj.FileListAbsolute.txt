@@ -283,3 +283,6 @@ C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net
 C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalL.CCF9E03E.Up2Date
 C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.genruntimeconfig.cache
 C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\ref\IllegalLibAPI.dll
+c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MailKit.dll
+c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MimeKit.dll

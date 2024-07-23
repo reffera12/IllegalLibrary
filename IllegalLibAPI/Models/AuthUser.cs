@@ -21,9 +21,10 @@ namespace IllegalLibAPI.Models
         public string Email { get; set; }
         [MinLength(128)]
         public string ResetToken { get; init; }
-        public string JwtToken { get; init; }
+        public string JwtToken { get; set; }
         [JsonIgnore]
         public string RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
         public User? User
         { get; set; }
