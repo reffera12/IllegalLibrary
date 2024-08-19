@@ -33,7 +33,7 @@ namespace IllegalLibAPI.Data.Repositories
             if (!passwordIsValid) throw new AuthenticationException("Invalid username or password");
 
 
-            var accessToken = _jwtTokenService.Authenticate(existingUser.Username, existingUser.Password);
+            var accessToken = _jwtTokenService.Authenticate(existingUser.Username);
             var refreshToken = _tokenGenerator.GenerateResetOrRefreshToken();
 
             existingUser.JwtToken = accessToken;

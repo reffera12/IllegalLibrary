@@ -25,7 +25,6 @@ C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\staticweba
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.IllegalLibAPI.props
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\scopedcss\bundle\IllegalLibAPI.styles.css
-C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.csproj.CopyComplete
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.dll
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\refint\IllegalLibAPI.dll
 C:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalLibAPI.pdb
@@ -286,3 +285,8 @@ C:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\obj\Debug\net
 c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MailKit.dll
 c:\Users\IliyanDryanov\Personal repos\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MimeKit.dll
+c:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+c:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MailKit.dll
+c:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+c:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\bin\Debug\net8.0\MimeKit.dll
+c:\Users\fpore\Training\IllegalLibrary\IllegalLibAPI\obj\Debug\net8.0\IllegalL.CCF9E03E.Up2Date

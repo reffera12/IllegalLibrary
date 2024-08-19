@@ -4529,11 +4529,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\IllegalLibAPI.csproj",
+      "projectUniqueName": "c:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\IllegalLibAPI.csproj",
       "projectName": "IllegalLibAPI",
-      "projectPath": "C:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\IllegalLibAPI.csproj",
+      "projectPath": "c:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\IllegalLibAPI.csproj",
       "packagesPath": "C:\\Users\\fpore\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\obj\\",
+      "outputPath": "c:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\fpore\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4634,13 +4634,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\fpore\\Training\\IllegalLibrary\\IllegalLibAPI\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }
